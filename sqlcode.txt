@@ -1,0 +1,528 @@
+CREATE TABLE Prodotto (
+	CodProdotto 	int 			not null primary key AUTO_INCREMENT,
+	Nome 			varchar(50) 	not null,
+	Tipologia 		varchar(20) 	not null,
+	Prezzo 			decimal(6,2) 	not null,
+	Descrizione 	varchar(200) 	not null,
+	DataRilascio 	date 			not null,
+	Produttore 		varchar(20),
+	Sviluppatore 	varchar(20),
+	Editore 		varchar(20),
+	Architettura 	varchar(10),
+	PEGI 			int
+);
+
+CREATE TABLE Utente (
+	Email 			varchar(50) 	not null primary key,
+	Nome 			varchar(50) 	not null,
+	Username 		varchar(20) 	not null,
+	Password 		varchar(20) 	not null,
+	DataNascita 	date 			not null,
+	Indirizzo 		varchar(50) 	not null,
+	CAP 			varchar(5) 		not null,
+	CodCarta 		varchar(16)
+);
+
+CREATE TABLE Ordine (
+	CodOrdine 		int 			not null primary key AUTO_INCREMENT,
+	Data			date 			not null,
+	EmailUtente		varchar(50)		not null,
+	foreign key (EmailUtente) references Utente(Email)
+);
+
+CREATE TABLE Tag (
+	Nome			varchar(20)		not null primary key
+);
+
+CREATE TABLE Recensione (
+	CodRecensione	int				not null primary key AUTO_INCREMENT,
+	Voto			int				not null,
+	Testo			varchar(200),
+	EmailRecensore	varchar(50)		not null,
+	Prodotto		int				not null,
+	foreign key (EmailRecensore) references Utente(Email),
+	foreign key (Prodotto) references Prodotto(CodProdotto)
+);
+
+CREATE TABLE Achievement (
+	Nome			varchar(50)		not null,
+	Descrizione		varchar(200)	not null,
+	Videogame		int 			not null,
+	primary key (Nome,Videogame),
+	foreign key (Videogame) references Prodotto(CodProdotto)
+);
+
+CREATE TABLE Segue (
+	EmailSegue		varchar(50)		not null,
+	EmailSeguito	varchar(50)		not null,
+	primary key (EmailSegue,EmailSeguito),
+	foreign key (EmailSegue) references Utente(Email),
+	foreign key (EmailSeguito) references Utente(Email)
+	
+);
+ 
+CREATE TABLE Acquisto (
+	Prodotto		int				not null,
+	Ordine			int				not null,
+	primary key (Prodotto,Ordine),
+	foreign key (Prodotto) references Prodotto(CodProdotto),
+	foreign key (Ordine) references Ordine(CodOrdine)
+);
+
+CREATE TABLE Possesso (
+	Prodotto		int				not null,
+	EmailUtente		varchar(50)		not null,
+	primary key (Prodotto,EmailUtente),
+	foreign key (Prodotto) references Prodotto(CodProdotto),
+	foreign key (EmailUtente) references Utente(Email)
+);
+
+CREATE TABLE Desiderio (
+	Prodotto		int				not null,
+	EmailUtente		varchar(50)		not null,
+	primary key (Prodotto,EmailUtente),
+	foreign key (Prodotto) references Prodotto(CodProdotto),
+	foreign key (EmailUtente) references Utente(Email)
+);
+
+CREATE TABLE Sblocco (
+	Nome			varchar(50)		not null,
+	Videogame		int				not null,
+	EmailUtente		varchar(50)		not null,
+	primary key	(Nome,Videogame,EmailUtente),
+	foreign key (Nome,Videogame) references Achievement(Nome,Videogame),
+	foreign key (EmailUtente) references Utente(Email)
+);
+
+CREATE TABLE Descrive (
+	NomeTag			varchar(20) 	not null,
+	Prodotto		int				not null,
+	primary key (NomeTag,Prodotto),
+	foreign key (NomeTag) references Tag(Nome),
+	foreign key (Prodotto) references Prodotto(CodProdotto)
+);
+
+/*
+INSERIMENTO DATI
+*/
+
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('bortonemichele@gmail.com', 'Michele Bortone', 'mb', '1234', '1996-06-27', 'Via Vittorio Veneto 9 Scorzè', '30037', '0000000000000000');
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('bobboalberto@gmail.com', 'Alberto Bobbo', 'bubi', '1234', '1996-03-07', 'Via milano 44 Mirano', '30034', '1111111111111111');
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('enricomarcato@gmail.com', 'Enrico Marcato', 'markets', '1234', '1996-03-12', 'Via Roma 124 Trebaseleghe', '30023', '2222222222222222');
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('gianni@gmail.com', 'Giovanni Bianchi', 'gianni', '1234', '1956-04-30', 'Via Roma 40 Trebaseleghe', '30023', '3432222242222222');
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('paolopaolotti@gmail.com', 'Paolo Paolotti', 'paolone', '1234', '2001-12-10', 'Via giusti 13 Padova', '30013', '1234567890123456');
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('marcorossi@gmail.com', 'Marco Rossi', 'reds', '1234', '2002-03-22', 'Via marmolada 10 Bojon', '30051', NULL);
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('giacomino@gmail.com', 'giacomo Binchi', 'giacomino', '1234', '2003-07-01', 'Via Trento 18 Martellag0', '30030', '8888888890123456');
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('riccardo11@gmail.com', 'Riccardo Rossi', 'reds', '1234', '1992-02-12', 'Piazza Garibaldi  10 Padova', '30013', '9999999999999999');
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('albi88@gmail.com', 'Alberto Alberti', 'Albertone', '1234', '1998-09-19', 'Via Bologna 105 Verona', '30021', '3334443334443334');
+
+INSERT INTO Utente (Email, Nome, Username, Password, DataNascita, Indirizzo, CAP, CodCarta) 
+VALUES ('ale2005@gmail.com', 'Alessandro Barboni', 'alealex', '1234', '2005-02-01', 'Via Sicilia 32 Perugia', '20021', NULL);
+
+
+
+
+
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'Windows 10', 'Programma', '100', 'è windows', '2017-09-01', NULL, 'Microsoft', 'Microsoft', 'x64', NULL);
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'Fifa 18', 'Videogioco', '59.90', 'gioco di calcio', '2017-09-09', NULL, 'EA Canada', 'EA Games', 'x86', '3');
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'Controller', 'Hardware', '39.90', 'Controller per videogiacare al PC', '2015-06-12', 'Microsoft', NULL, NULL, NULL, NULL);
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'Notebook XH3', 'Hardware', '1049', 'Notebook con ottime caratteristiche', '2017-03-12', 'ASUS', NULL, NULL, NULL, NULL);
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'League of Legends', 'Videogioco', '0', 'videogame online', '2009-10-27', NULL, 'RIOT Games', 'RIOT Games', 'x86', '12');
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'Tetris', 'Videogioco', '0', 'Il classico tetris', '1980-01-01', NULL, 'Inventore Tetris', 'Microsoft', 'x86', '3');
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'GTA 5', 'Videogioco', '70', 'Puoi uccidere le persone per strada', '2015-08-21', NULL, 'RockStar', 'RockStar', 'x64', '18');
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'AutoCad', 'Programma', '200', 'Disegni tecnici', '2013-03-30', NULL, 'Autocad.inc', 'Autocad.inc', 'x64', NULL);
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'Blender', 'Programma', '0', 'Programma di modellazione', '2014-04-10', NULL, 'Blender.inc', 'BLENDER.inc', 'x86', NULL);
+
+INSERT INTO Prodotto (CodProdotto, Nome, Tipologia, Prezzo, Descrizione, DataRilascio, Produttore, Sviluppatore, Editore, Architettura, PEGI) 
+VALUES (NULL, 'Cuffie Gaming', 'Hardware', '89.90', 'Ottima risposta in frequenza', '2017-07-12', 'Razer', NULL, NULL, NULL, NULL);
+
+
+
+
+INSERT INTO Tag (Nome) VALUES ('sport');
+INSERT INTO Tag (Nome) VALUES ('sistemaOperativo');
+INSERT INTO Tag (Nome) VALUES ('modellazione');
+INSERT INTO Tag (Nome) VALUES ('azione');
+INSERT INTO Tag (Nome) VALUES ('arcade');
+INSERT INTO Tag (Nome) VALUES ('mmo');
+INSERT INTO Tag (Nome) VALUES ('notebook');
+INSERT INTO Tag (Nome) VALUES ('cuffie');
+INSERT INTO Tag (Nome) VALUES ('online');
+INSERT INTO Tag (Nome) VALUES ('accessorio');
+INSERT INTO Tag (Nome) VALUES ('gaming');
+INSERT INTO Tag (Nome) VALUES ('freeToPlay');
+
+
+
+
+INSERT INTO Recensione (CodRecensione, Voto, Testo, EmailRecensore, Prodotto) 
+VALUES (NULL,'8','bello','bortonemichele@gmail.com','1');
+
+INSERT INTO Recensione (CodRecensione, Voto, Testo, EmailRecensore, Prodotto) 
+VALUES (NULL,'9','fantastico','bortonemichele@gmail.com','2');
+
+INSERT INTO Recensione (CodRecensione, Voto, Testo, EmailRecensore, Prodotto) 
+VALUES (NULL,'6','discreto','bobboalberto@gmail.com','1');
+
+INSERT INTO Recensione (CodRecensione, Voto, Testo, EmailRecensore, Prodotto) 
+VALUES (NULL,'5','insomma','enricomarcato@gmail.com','1');
+
+INSERT INTO Recensione (CodRecensione, Voto, Testo, EmailRecensore, Prodotto) 
+VALUES (NULL,'9','ottimo prodotto','enricomarcato@gmail.com','10');
+
+INSERT INTO Recensione (CodRecensione, Voto, Testo, EmailRecensore, Prodotto) 
+VALUES (NULL,'5','non mi piace','giacomino@gmail.com','2');
+
+INSERT INTO Recensione (CodRecensione, Voto, Testo, EmailRecensore, Prodotto) 
+VALUES (NULL,'7','buon prodotto','giacomino@gmail.com','3');
+
+INSERT INTO Recensione (CodRecensione, Voto, Testo, EmailRecensore, Prodotto) 
+VALUES (NULL,'10','Fantastico!!!!','giacomino@gmail.com','1');
+
+INSERT INTO Recensione (CodRecensione, Voto, Testo, EmailRecensore, Prodotto) 
+VALUES (NULL,'3','pieno di problemi','giacomino@gmail.com','5');
+
+
+
+
+
+INSERT INTO Ordine (CodOrdine, Data, EmailUtente) VALUES (NULL,'2017-06-11','bobboalberto@gmail.com');
+INSERT INTO Ordine (CodOrdine, Data, EmailUtente) VALUES (NULL,'2017-08-23','bobboalberto@gmail.com');
+INSERT INTO Ordine (CodOrdine, Data, EmailUtente) VALUES (NULL,'2017-09-02','bortonemichele@gmail.com');
+INSERT INTO Ordine (CodOrdine, Data, EmailUtente) VALUES (NULL,'2017-09-05','enricomarcato@gmail.com');
+INSERT INTO Ordine (CodOrdine, Data, EmailUtente) VALUES (NULL,'2017-09-06','bobboalberto@gmail.com');
+INSERT INTO Ordine (CodOrdine, Data, EmailUtente) VALUES (NULL,'2017-09-08','giacomino@gmail.com');
+
+
+
+
+
+
+INSERT INTO Achievement (Nome, Descrizione, Videogame) VALUES ('Goleador','Segna 10 gol','2');
+INSERT INTO Achievement (Nome, Descrizione, Videogame) VALUES ('Killer','Commetti 10 falli','2');
+INSERT INTO Achievement (Nome, Descrizione, Videogame) VALUES ('Fuoriclasse','Vinci 100 partite online','5');
+INSERT INTO Achievement (Nome, Descrizione, Videogame) VALUES ('Esperto','Gioca per 10 ore','5');
+INSERT INTO Achievement (Nome, Descrizione, Videogame) VALUES ('Apprendista','gioca una partita','6');
+INSERT INTO Achievement (Nome, Descrizione, Videogame) VALUES ('Sangue freddo','Spara alla testa a 10 persone','7');
+INSERT INTO Achievement (Nome, Descrizione, Videogame) VALUES ('Ladro','ruba 100 macchine','7');
+INSERT INTO Achievement (Nome, Descrizione, Videogame) VALUES ('Alla moda','Cambia taglio di capelli','7');
+
+
+
+
+
+
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('sistemaOperativo','1');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('sport','2');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('online','2');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('gaming','3');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('accessorio','3');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('gaming','4');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('notebook','4');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('mmo','5');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('azione','5');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('freeToPlay','5');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('online','5');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('arcade','6');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('freeToPlay','6');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('azione','7');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('online','7');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('modellazione','8');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('modellazione','9');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('accessorio','10');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('cuffie','10');
+INSERT INTO Descrive(NomeTag, Prodotto) VALUES ('gaming','10');
+
+
+
+
+
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('bobboalberto@gmail.com','bortonemichele@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('bortonemichele@gmail.com','bobboalberto@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('bortonemichele@gmail.com','giacomino@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('giacomino@gmail.com','bortonemichele@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('giacomino@gmail.com','bobboalberto@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('giacomino@gmail.com','enricomarcato@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('bortonemichele@gmail.com','enricomarcato@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('bobboalberto@gmail.com','enricomarcato@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('gianni@gmail.com','enricomarcato@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('gianni@gmail.com','bortonemichele@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('gianni@gmail.com','bobboalberto@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('gianni@gmail.com','giacomino@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('albi88@gmail.com','gianni@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('albi88@gmail.com','bortonemichele@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('enricomarcato@gmail.com','gianni@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('albi88@gmail.com','bobboalberto@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('albi88@gmail.com','ale2005@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('ale2005@gmail.com','gianni@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('enricomarcato@gmail.com','ale2005@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('giacomino@gmail.com','ale2005@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('ale2005@gmail.com','giacomino@gmail.com');
+INSERT INTO Segue (EmailSegue, EmailSeguito) VALUES ('ale2005@gmail.com','paolopaolotti@gmail.com');
+
+
+
+
+INSERT INTO Sblocco (Nome, Videogame, EmailUtente) VALUES ('Goleador', '2', 'bortonemichele@gmail.com');
+INSERT INTO Sblocco (Nome, Videogame, EmailUtente) VALUES ('Killer', '2', 'bortonemichele@gmail.com');
+INSERT INTO Sblocco (Nome, Videogame, EmailUtente) VALUES ('Goleador', '2', 'bobboalberto@gmail.com');
+INSERT INTO Sblocco (Nome, Videogame, EmailUtente) VALUES ('Killer', '2', 'bobboalberto@gmail.com');
+INSERT INTO Sblocco (Nome, Videogame, EmailUtente) VALUES ('Esperto', '5', 'bobboalberto@gmail.com');
+INSERT INTO Sblocco (Nome, Videogame, EmailUtente) VALUES ('Sangue freddo', '7', 'bobboalberto@gmail.com');
+INSERT INTO Sblocco (Nome, Videogame, EmailUtente) VALUES ('Ladro', '7', 'bobboalberto@gmail.com');
+INSERT INTO Sblocco (Nome, Videogame, EmailUtente) VALUES ('Killer', '2', 'giacomino@gmail.com');
+
+
+
+
+INSERT INTO Acquisto (Prodotto, Ordine) VALUES ('2', '1');
+INSERT INTO Acquisto (Prodotto, Ordine) VALUES ('7', '1');
+INSERT INTO Acquisto (Prodotto, Ordine) VALUES ('5', '2');
+INSERT INTO Acquisto (Prodotto, Ordine) VALUES ('2', '3');
+INSERT INTO Acquisto (Prodotto, Ordine) VALUES ('3', '3');
+INSERT INTO Acquisto (Prodotto, Ordine) VALUES ('1', '4');
+INSERT INTO Acquisto (Prodotto, Ordine) VALUES ('10', '5');
+INSERT INTO Acquisto (Prodotto, Ordine) VALUES ('2', '6');
+
+
+
+INSERT INTO Possesso (Prodotto, EmailUtente) VALUES ('2', 'bobboalberto@gmail.com');
+INSERT INTO Possesso (Prodotto, EmailUtente) VALUES ('7', 'bobboalberto@gmail.com');
+INSERT INTO Possesso (Prodotto, EmailUtente) VALUES ('5', 'bobboalberto@gmail.com');
+INSERT INTO Possesso (Prodotto, EmailUtente) VALUES ('2', 'bortonemichele@gmail.com');
+INSERT INTO Possesso (Prodotto, EmailUtente) VALUES ('3', 'bortonemichele@gmail.com');
+INSERT INTO Possesso (Prodotto, EmailUtente) VALUES ('1', 'enricomarcato@gmail.com');
+INSERT INTO Possesso (Prodotto, EmailUtente) VALUES ('10', 'bobboalberto@gmail.com');
+INSERT INTO Possesso (Prodotto, EmailUtente) VALUES ('2', 'giacomino@gmail.com');
+
+
+
+INSERT INTO Desiderio (Prodotto, EmailUtente) VALUES ('4', 'bortonemichele@gmail.com');
+INSERT INTO Desiderio (Prodotto, EmailUtente) VALUES ('4', 'bobboalberto@gmail.com');
+INSERT INTO Desiderio (Prodotto, EmailUtente) VALUES ('4', 'giacomino@gmail.com');
+INSERT INTO Desiderio (Prodotto, EmailUtente) VALUES ('4', 'paolopaolotti@gmail.com');
+INSERT INTO Desiderio (Prodotto, EmailUtente) VALUES ('2', 'ale2005@gmail.com');
+INSERT INTO Desiderio (Prodotto, EmailUtente) VALUES ('1', 'ale2005@gmail.com');
+INSERT INTO Desiderio (Prodotto, EmailUtente) VALUES ('7', 'ale2005@gmail.com');
+INSERT INTO Desiderio (Prodotto, EmailUtente) VALUES ('2', 'bobboalberto@gmail.com');
+
+
+/*
+
+Restituisce la libreria software, cioè la lista di software acquistati di un utente specifico.
+
+SET @EmailUtente= 'bobboalberto@gmail.com';
+SELECT Prodotto.Nome FROM Prodotto JOIN Possesso ON Prodotto.CodProdotto = Possesso.Prodotto 
+WHERE (Prodotto.Tipologia='Videogioco' OR Prodotto.Tipologia='programma') AND Possesso.EmailUtente = @EmailUtente
+ORDER BY Possesso.EmailUtente;
+
+OUTPUT:
+
++-------------------+
+| Nome              |
++-------------------+
+| Fifa 18           |
+| League of Legends |
+| GTA 5             |
++-------------------+
+
+
+Restituisce data, prezzo totale e il nome dell'utente ch ha effettuato uno specifico ordine.
+
+SET @CodOrdine = 1;
+SELECT Ordine.CodOrdine, Ordine.Data, SUM(Prodotto.Prezzo) AS 'Importo', Utente.Nome
+FROM ((Ordine JOIN Acquisto ON Ordine.CodOrdine = Acquisto.Ordine) 
+JOIN Prodotto ON Prodotto.CodProdotto = Acquisto.Prodotto)
+JOIN Utente ON Ordine.EmailUtente = Utente.Email
+WHERE Ordine.CodOrdine = @CodOrdine;
+
+OUTPUT:
+
++-----------+------------+---------+---------------+
+| CodOrdine | Data       | Importo | Nome          |
++-----------+------------+---------+---------------+
+|         1 | 2017-06-11 |  129.90 | Alberto Bobbo |
++-----------+------------+---------+---------------+
+
+Restituisce i catalogo dei prodotti e il loro prezzo ordinati in base alla media voto ottenuta nelle recensioni.
+
+SELECT Prodotto.Nome, AVG(Recensione.Voto) AS 'Media voti', Prodotto.Prezzo 
+FROM Recensione RIGHT JOIN Prodotto ON Recensione.Prodotto = Prodotto.CodProdotto
+GROUP BY Prodotto.CodProdotto
+ORDER BY AVG(Recensione.Voto) DESC;
+
+OUTPUT:
+
++-------------------+------------+---------+
+| Nome              | Media voti | Prezzo  |
++-------------------+------------+---------+
+| Cuffie Gaming     |     9.0000 |   89.90 |
+| Windows 10        |     7.2500 |  100.00 |
+| Controller        |     7.0000 |   39.90 |
+| Fifa 18           |     7.0000 |   59.90 |
+| League of Legends |     3.0000 |    0.00 |
+| Blender           |       NULL |    0.00 |
+| AutoCad           |       NULL |  200.00 |
+| GTA 5             |       NULL |   70.00 |
+| Tetris            |       NULL |    0.00 |
+| Notebook XH3      |       NULL | 1049.00 |
++-------------------+------------+---------+
+
+
+Restituisce la classifica dei prodotti più desiderati dalle persone che un utente segue
+
+SET @EmailUtente = 'bortonemichele@gmail.com';
+SELECT Prodotto.CodProdotto, Prodotto.Nome, COUNT(Prodotto.CodProdotto) AS 'Numero Desideri'
+FROM Desiderio JOIN Prodotto ON Desiderio.Prodotto = Prodotto.CodProdotto 
+WHERE Desiderio.EmailUtente = ANY (	SELECT Segue.EmailSeguito FROM Segue WHERE Segue.EmailSegue= @EmailUtente) 
+GROUP BY Prodotto.CodProdotto 
+ORDER BY COUNT(Prodotto.CodProdotto) DESC;
+
+OUTPUT:
+
++-------------+--------------+-----------------+
+| CodProdotto | Nome         | Numero Desideri |
++-------------+--------------+-----------------+
+|           4 | Notebook XH3 |               2 |
+|           2 | Fifa 18      |               1 |
++-------------+--------------+-----------------+
+
+
+Restituisce la classifica delle persone seguite da un utente in base al numero di Achievements sbloccati 
+
+SET @EmailUtente = 'bortonemichele@gmail.com';
+SELECT Utente.Nome, COUNT(Utente.Email) AS 'Obiettivi sbloccati'
+FROM Utente JOIN Sblocco ON Utente.Email = Sblocco.EmailUtente
+WHERE Utente.Email = ANY (SELECT Segue.EmailSeguito FROM Segue WHERE Segue.EmailSegue= @EmailUtente)
+GROUP BY (Utente.Email)
+ORDER BY COUNT(Utente.Email) DESC;
+
+OUTPUT:
+
++----------------+---------------------+
+| Nome           | Obiettivi sbloccati |
++----------------+---------------------+
+| Alberto Bobbo  |                   5 |
+| giacomo Binchi |                   1 |
++----------------+---------------------+
+
+
+Restituisce la lista con prezzo e PEGI di videogiochi consigliati adatti all'età di uno specifico utente ordinati per la media del voto delle recensioni
+
+SET @EmailUtente = 'ale2005@gmail.com';
+SELECT Prodotto.Nome, Prodotto.Prezzo, AVG(Recensione.Voto), Prodotto.PEGI 
+FROM Prodotto LEFT JOIN Recensione ON Prodotto.CodProdotto = Recensione.Prodotto
+WHERE Prodotto.CodProdotto = ANY (SELECT Prodotto.CodProdotto FROM Prodotto WHERE Prodotto.Tipologia = 'Videogioco' AND Prodotto.PEGI < (SELECT DATEDIFF(CURRENT_DATE(),Utente.DataNascita)/365 FROM Utente WHERE Utente.Email = @EmailUtente))	
+GROUP BY Prodotto.CodProdotto
+ORDER BY AVG(Recensione.Voto) DESC;
+
+OUTPUT:
+
++-------------------+--------+----------------------+------+
+| Nome              | Prezzo | AVG(Recensione.Voto) | PEGI |
++-------------------+--------+----------------------+------+
+| Fifa 18           |  59.90 |               7.0000 |    3 |
+| League of Legends |   0.00 |               3.0000 |   12 |
+| Tetris            |   0.00 |                 NULL |    3 |
++-------------------+--------+----------------------+------+
+
+
+
+FUNZIONI
+
+Funzione che calcola il prezzo totale di un ordine usando la query fatta prima
+
+CREATE FUNCTION PrezzoTotale(CodOrd int)
+RETURNS decimal(6,2)
+
+BEGIN 
+DECLARE PTotale decimal(6,2);
+
+SELECT SUM(Prodotto.Prezzo) INTO PTotale
+FROM Acquisto JOIN Prodotto ON Acquisto.Prodotto = Prodotto.CodProdotto
+WHERE Acquisto.Ordine = CodOrd;
+
+RETURN PTotale;
+END
+
+Funzione che ritorna true se l'utente è maggiorenne e false se non lo è.
+
+CREATE FUNCTION PrezzoTotale(EmailUt varchar(50))
+RETURNS boolean
+
+BEGIN 
+DECLARE Maggiorenne boolean;
+DECLARE Età int;
+
+SELECT DATEDIFF(CURRENT_DATE(),Utente.DataNascita)/365 INTO Età
+FROM Utente WHERE Utente.Email = EmailUt;
+
+IF Età >= 18
+	THEN SET Maggiorenne=1;
+	ELSE SET Maggiorenne=0;
+END IF;
+
+RETURN Maggiorenne;
+END 
+
+TRIGGER
+
+Trigger che se viene inserito un voto della recensione >10 mette automaticamente 10
+
+CREATE TRIGGER Max10
+BEFORE INSERT ON Recensione
+FOR EACH ROW
+WHEN (New.Voto > 10)
+SET New.Voto =10;
+
+Trigger che se viene inserito un voto della recensione <1 mette automaticamente 1
+
+CREATE TRIGGER Min1
+BEFORE INSERT ON Recensione
+FOR EACH ROW
+WHEN (New.Voto < 1)
+SET New.Voto =1;
+
+Trigger 
+
+*/
+
+
+
+
